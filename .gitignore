@@ -43,8 +43,13 @@ credentials.json
 # IDE
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
+
+# Scratch notebooks (raw material, may contain hardcoded secrets)
+Pincone 101.ipynb
+*.scratch.ipynb
 
 # OS
 .DS_Store
