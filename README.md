@@ -6,18 +6,26 @@ RAG is the technique of grounding a language model's responses in external knowl
 
 ## Module 01 cheat sheet
 
-The intro module ships with a one-page cheat sheet covering every Pinecone + OpenAI call used across the three notebooks:
+The intro module ships with a one-page cheat sheet covering every Pinecone + OpenAI call used across its three notebooks:
 
 ![Pinecone + OpenAI RAG cheat sheet](./01-intro-to-rag/assets/cheatsheet.png)
 
 Source: [`01-intro-to-rag/scripts/render_cheatsheet.py`](./01-intro-to-rag/scripts/render_cheatsheet.py). Regenerate with `python scripts/render_cheatsheet.py` from inside the module.
 
+## Module 02 cheat sheet
+
+The graph module has its own one-pager covering Kuzu, openCypher, and the LangChain `KuzuQAChain`:
+
+![Kuzu + LangChain Graph RAG cheat sheet](./02-graph-rag/assets/cheatsheet.png)
+
+Source: [`02-graph-rag/scripts/render_cheatsheet.py`](./02-graph-rag/scripts/render_cheatsheet.py).
+
 ## Modules
 
 | # | Module | Description | Status |
 |---|--------|-------------|--------|
-| 01 | [Intro to RAG](./01-intro-to-rag/) | The canonical pattern: embeddings, a vector database (Pinecone), and a retrieval-augmented prompt. Three notebooks, crawl / walk / run. | 🚧 In progress |
-| 02 | [Graph RAG](./02-graph-rag/) | Retrieval over a knowledge graph using Neo4j and LangChain, for cases where structure beats similarity. | 📋 Planned |
+| 01 | [Intro to RAG](./01-intro-to-rag/) | The canonical pattern: embeddings, a vector database (Pinecone), and a retrieval-augmented prompt. Three notebooks, crawl / walk / run. | ✅ Shipped |
+| 02 | [Graph RAG](./02-graph-rag/) | Retrieval over a knowledge graph using Kuzu (embedded, pip-installable) and LangChain, for cases where structure beats similarity. Three notebooks, same crawl / walk / run arc. | ✅ Shipped |
 | 03 | [Vectorless RAG](./03-vectorless-rag/) | Retrieval without embeddings. BM25, keyword search, and why you don't always need a vector store. | 📋 Planned |
 | 04 | [Evaluating RAG](./04-evaluating-rag/) | Measuring what matters: faithfulness, answer relevance, context precision. | 📋 Planned |
 | 05 | [Advanced RAG](./05-advanced-rag/) | Re-ranking, query rewriting, hybrid search, and the other patterns that move the needle in production. | 📋 Planned |
@@ -28,7 +36,7 @@ Each module has its own README with setup instructions and dependencies. Clone t
 
 ```bash
 git clone https://github.com/allllc/rag-unpacked.git
-cd rag-unpacked/01-intro-to-rag
+cd rag-unpacked/02-graph-rag
 ```
 
 ## License
