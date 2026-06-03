@@ -37,7 +37,7 @@ STRING = "#7a4ec7"
 
 # --- layout primitives ---------------------------------------------------
 
-PAGE_W, PAGE_H = 22.0, 16.5
+PAGE_W, PAGE_H = 22.0, 19.5
 MARGIN = 0.35
 BANNER_H = 1.35
 COL_GAP = 0.35
@@ -65,7 +65,7 @@ def draw_footer(ax):
     ax.text(MARGIN, 0.18, "github.com/allllc/rag-unpacked",
             color=MUTED, fontsize=7.8, va="center", family="DejaVu Sans")
     ax.text(PAGE_W - MARGIN, 0.18,
-            "module 02  ·  graph-rag  ·  Kuzu 0.11 + langchain-kuzu 0.4 + OpenAI",
+            "module 02  ·  graph-rag  ·  NB1-NB4  ·  Kuzu 0.11 + langchain-kuzu 0.4",
             color=MUTED, fontsize=7.8, va="center", ha="right", family="DejaVu Sans")
 
 
@@ -189,15 +189,15 @@ def content_column_1(ax, col):
         "# Nodes (parameterized for safety)",
         ">>> conn.execute(",
         "...   \"CREATE (:Person {name: $n})\",",
-        "...   {\"n\": \"Florence Pugh\"})",
+        "...   {\"n\": \"Keanu Reeves\"})",
         "",
         "# Relationships need a MATCH first",
         ">>> conn.execute(\"\"\"",
         "...   MATCH (p:Person {name: $a}),",
         "...         (m:Movie {title: $t})",
         "...   CREATE (p)-[:ACTED_IN]->(m)",
-        "... \"\"\", {\"a\": \"Florence Pugh\",",
-        "...      \"t\": \"Oppenheimer\"})",
+        "... \"\"\", {\"a\": \"Keanu Reeves\",",
+        "...      \"t\": \"The Matrix\"})",
     ])
 
     draw_section(ax, col, "Inspect", [
@@ -224,22 +224,22 @@ def content_column_2(ax, col):
 
     draw_section(ax, col, "WHERE filters", [
         "# Numeric range",
-        ">>> WHERE p.born_year > 1985",
+        ">>> WHERE p.born_year > 1970",
+        ">>> WHERE m.year < 2000",
         "",
-        "# Exact / inequality",
-        ">>> WHERE m.year = 2023",
-        ">>> WHERE other.name <> 'Florence Pugh'",
+        "# Inequality",
+        ">>> WHERE other.name <> 'Keanu Reeves'",
         "",
         "# String contains",
-        ">>> WHERE m.title CONTAINS 'Dune'",
+        ">>> WHERE m.title CONTAINS 'Matrix'",
     ])
 
     draw_section(ax, col, "Multi-hop traversals", [
         "# Two-hop: co-actors",
         ">>> MATCH (a:Person)-[:ACTED_IN]->",
         "...       (m:Movie)<-[:ACTED_IN]-(b:Person)",
-        "...   WHERE a.name = 'Florence Pugh'",
-        "...     AND b.name <> 'Florence Pugh'",
+        "...   WHERE a.name = 'Keanu Reeves'",
+        "...     AND b.name <> 'Keanu Reeves'",
         "",
         "# Three-hop: directors via films",
         ">>> MATCH (a:Person)-[:ACTED_IN]->",
@@ -267,39 +267,39 @@ def content_column_2(ax, col):
         "# Parameters (safe, faster)",
         ">>> conn.execute(",
         "...   \"MATCH (p:Person {name: $n}) RETURN p\",",
-        "...   {\"n\": \"Jordan Peele\"})",
+        "...   {\"n\": \"Christopher Nolan\"})",
     ])
 
 
 def content_column_3(ax, col):
     draw_section(ax, col, "LangChain wrapper", [
-        ">>> import kuzu",
         ">>> from langchain_kuzu.graphs.kuzu_graph \\",
         "...   import KuzuGraph",
         ">>> from langchain_kuzu.chains.graph_qa.kuzu \\",
         "...   import KuzuQAChain",
         ">>> from langchain_openai import ChatOpenAI",
         "",
-        ">>> graph = KuzuGraph(",
-        "...   kuzu.Database(\"data/movies.kuzu\"),",
+        "# Reuse conn.database (don't open a 2nd DB",
+        "# handle: Kuzu file-locks the path).",
+        ">>> graph = KuzuGraph(conn.database,",
         "...   allow_dangerous_requests=True)",
         ">>> print(graph.schema)  # what the LLM sees",
     ])
 
     draw_section(ax, col, "Manual loop (Act I)", [
         "# 1. Generate Cypher",
-        ">>> prompt = CYPHER_TEMPLATE.format(",
-        "...   schema=graph.schema, question=q)",
+        ">>> prompt = (INSTRUCTIONS",
+        "...   + \"\\nSchema:\\n\" + graph.schema",
+        "...   + \"\\nQuestion:\\n\" + question)",
         ">>> cypher = client.chat.completions",
-        "...   .create(model=..., messages=[...])",
+        "...   .create(...).choices[0].message.content",
         "",
         "# 2. Run on Kuzu",
         ">>> rows = conn.execute(cypher).get_as_df()",
         "",
-        "# 3. Synthesize answer",
-        ">>> answer = client.chat.completions",
-        "...   .create(model=..., messages=[q, rows])",
-    ], subtitle="Two LLM calls per question")
+        "# 3. Synthesize answer (same client call",
+        "#    with question + rows.to_string())",
+    ], subtitle="Don't use .format(): schema has { }")
 
     draw_section(ax, col, "KuzuQAChain (Act II)", [
         ">>> llm = ChatOpenAI(model=\"gpt-4o-mini\",",
@@ -311,20 +311,42 @@ def content_column_3(ax, col):
         "",
         ">>> chain.invoke({\"query\": q})[\"result\"]",
         "",
-        "# Same two LLM calls, hidden behind one",
-        "# invoke. Prompts live in",
+        "# Same two LLM calls, hidden. Prompts in",
         "# langchain_kuzu.chains.graph_qa.prompts",
     ])
 
-    draw_section(ax, col, "Switching to Neo4j", [
-        "# Same Cypher, two import swaps.",
-        ">>> from langchain_neo4j import \\",
-        "...   Neo4jGraph, GraphCypherQAChain",
+    draw_section(ax, col, "Text on nodes (NB4)", [
+        "# Schema: two text patterns side by side.",
+        ">>> CREATE NODE TABLE Script(",
+        "...   movie_title STRING, content STRING,",
+        "...   PRIMARY KEY (movie_title))",
+        ">>> CREATE NODE TABLE Scene(",
+        "...   scene_id STRING, heading STRING,",
+        "...   body STRING, PRIMARY KEY (scene_id))",
+        ">>> CREATE REL TABLE",
+        "...   HAS_SCRIPT(FROM Movie TO Script),",
+        "...   HAS_SCENE (FROM Movie TO Scene)",
         "",
-        ">>> graph = Neo4jGraph(",
-        "...   url=\"bolt://localhost:7687\",",
-        "...   username=\"neo4j\",",
-        "...   password=\"...\")",
+        "# Whole-document retrieval (baseline)",
+        ">>> MATCH (m:Movie {title: $t})",
+        "...   -[:HAS_SCRIPT]->(s) RETURN s.content",
+        "",
+        "# Chunk-level retrieval (production)",
+        ">>> MATCH (m:Movie {title: $t})",
+        "...   -[:HAS_SCENE]->(sc:Scene)",
+        "...   WHERE lower(sc.body)",
+        "...         CONTAINS lower($keyword)",
+        "...   RETURN sc.heading, sc.body",
+        "",
+        "# Kuzu CONTAINS is case-sensitive: wrap",
+        "# both sides with lower() to be safe.",
+    ], subtitle="Chunk on natural boundaries (INT./EXT.)")
+
+    draw_section(ax, col, "Switching to Neo4j", [
+        "# Same Cypher; just swap the graph ctor.",
+        ">>> from langchain_neo4j import Neo4jGraph",
+        ">>> graph = Neo4jGraph(url=..., username=...,",
+        "...                    password=...)",
     ])
 
 
