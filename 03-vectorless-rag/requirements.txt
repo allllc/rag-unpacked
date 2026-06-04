@@ -1,0 +1,9 @@
+bm25s>=0.3
+PyStemmer>=2.2
+openai>=1.50
+pinecone>=7.0,<8.0
+python-dotenv>=1.0
+pandas>=2.2
+pyarrow>=15.0
+matplotlib>=3.8
+ipykernel>=6.29

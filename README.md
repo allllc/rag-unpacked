@@ -20,13 +20,21 @@ The graph module has its own one-pager covering Kuzu, openCypher, and the LangCh
 
 Source: [`02-graph-rag/scripts/render_cheatsheet.py`](./02-graph-rag/scripts/render_cheatsheet.py).
 
+## Module 03 cheat sheet
+
+The vectorless module covers BM25 (via `bm25s`), the four-step vectorless RAG loop, and hybrid retrieval via Reciprocal Rank Fusion:
+
+![BM25 + Hybrid Vectorless RAG cheat sheet](./03-vectorless-rag/assets/cheatsheet.png)
+
+Source: [`03-vectorless-rag/scripts/render_cheatsheet.py`](./03-vectorless-rag/scripts/render_cheatsheet.py).
+
 ## Modules
 
 | # | Module | Description | Status |
 |---|--------|-------------|--------|
 | 01 | [Intro to RAG](./01-intro-to-rag/) | The canonical pattern: embeddings, a vector database (Pinecone), and a retrieval-augmented prompt. Three notebooks, crawl / walk / run. | ✅ Shipped |
 | 02 | [Graph RAG](./02-graph-rag/) | Retrieval over a knowledge graph using Kuzu (embedded, pip-installable) and LangChain, for cases where structure beats similarity. Three notebooks, same crawl / walk / run arc. | ✅ Shipped |
-| 03 | [Vectorless RAG](./03-vectorless-rag/) | Retrieval without embeddings. BM25, keyword search, and why you don't always need a vector store. | 📋 Planned |
+| 03 | [Vectorless RAG](./03-vectorless-rag/) | BM25 and hybrid retrieval. The baseline you should beat before reaching for vectors. Three notebooks, including a head-to-head against module 01's vector index. | ✅ Shipped |
 | 04 | [Evaluating RAG](./04-evaluating-rag/) | Measuring what matters: faithfulness, answer relevance, context precision. | 📋 Planned |
 | 05 | [Advanced RAG](./05-advanced-rag/) | Re-ranking, query rewriting, hybrid search, and the other patterns that move the needle in production. | 📋 Planned |
 
