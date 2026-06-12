@@ -28,6 +28,14 @@ The vectorless module covers BM25 (via `bm25s`), the four-step vectorless RAG lo
 
 Source: [`03-vectorless-rag/scripts/render_cheatsheet.py`](./03-vectorless-rag/scripts/render_cheatsheet.py).
 
+## Module 04 cheat sheet
+
+The evaluation module covers RAGAS, the four LLM-judge metrics, the cheap hand-rolled retrieval metrics, and the six-by-three head-to-head matrix:
+
+![RAGAS + hand-rolled Evaluating RAG cheat sheet](./04-evaluating-rag/assets/cheatsheet.png)
+
+Source: [`04-evaluating-rag/scripts/render_cheatsheet.py`](./04-evaluating-rag/scripts/render_cheatsheet.py).
+
 ## Modules
 
 | # | Module | Description | Status |
@@ -35,7 +43,7 @@ Source: [`03-vectorless-rag/scripts/render_cheatsheet.py`](./03-vectorless-rag/s
 | 01 | [Intro to RAG](./01-intro-to-rag/) | The canonical pattern: embeddings, a vector database (Pinecone), and a retrieval-augmented prompt. Three notebooks, crawl / walk / run. | ✅ Shipped |
 | 02 | [Graph RAG](./02-graph-rag/) | Retrieval over a knowledge graph using Kuzu (embedded, pip-installable) and LangChain, for cases where structure beats similarity. Three notebooks, same crawl / walk / run arc. | ✅ Shipped |
 | 03 | [Vectorless RAG](./03-vectorless-rag/) | BM25 and hybrid retrieval. The baseline you should beat before reaching for vectors. Three notebooks, including a head-to-head against module 01's vector index. | ✅ Shipped |
-| 04 | [Evaluating RAG](./04-evaluating-rag/) | Measuring what matters: faithfulness, answer relevance, context precision. | 📋 Planned |
+| 04 | [Evaluating RAG](./04-evaluating-rag/) | RAGAS, the four LLM-judge metrics, hand-rolled precision/recall/MRR, and a six-by-three head-to-head matrix across vector / BM25 / hybrid. Four notebooks. | ✅ Shipped |
 | 05 | [Advanced RAG](./05-advanced-rag/) | Re-ranking, query rewriting, hybrid search, and the other patterns that move the needle in production. | 📋 Planned |
 
 ## Getting started
